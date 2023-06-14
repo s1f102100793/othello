@@ -1,10 +1,11 @@
 import React from 'react';
+import Piece from './Piece';
 
 const Board = () => {
-  const boardSize = 8; // 盤面のサイズ
-  const cellSize = 80; // マス目のサイズ
-  const boardWidth = boardSize * cellSize; // 盤面の幅
-  const boardHeight = boardSize * cellSize; // 盤面の高さ
+  const boardSize = 8;
+  const cellSize = 80;
+  const boardWidth = boardSize * cellSize;
+  const boardHeight = boardSize * cellSize;
 
   const boardStyle = {
     width: `${boardWidth}px`,
@@ -25,7 +26,22 @@ const Board = () => {
           height: `${cellSize}px`,
           border: '1px solid black',
         };
-        cells.push(<div key={`${row}-${col}`} style={cellStyle}></div>);
+
+        if ((row === 3 && col === 3) || (row === 4 && col === 4)) {
+          cells.push(
+            <div key={`${row}-${col}`} style={cellStyle}>
+              <Piece color="black" />
+            </div>
+          );
+        } else if ((row === 3 && col === 4) || (row === 4 && col === 3)) {
+          cells.push(
+            <div key={`${row}-${col}`} style={cellStyle}>
+              <Piece color="white" />
+            </div>
+          );
+        } else {
+          cells.push(<div key={`${row}-${col}`} style={cellStyle}></div>);
+        }
       }
     }
     return cells;
