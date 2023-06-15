@@ -1,0 +1,40 @@
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+  background-color: #eee;
+}
+
+.othello-board {
+  display: grid;
+  grid-template-columns: repeat(8, 80px);
+  grid-template-rows: repeat(8, 80px);
+  width: 640px;
+  height: 640px;
+  background-color: green;
+}
+
+.cell {
+  display: flex;
+  justify-content: center;
+  align-items:center;
+  width: 80px;
+  height: 80px;
+  border: 1px solid black;
+}
+
+.black {
+  width: 60px;
+  height: 60px;
+  background-color: black;
+  border-radius: 50%;
+}
+
+.white {
+  width: 60px;
+  height: 60px;
+  background-color: white;
+  border-radius: 50%;
+}

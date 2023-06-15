@@ -1,11 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import OthelloBoard from './components/OthelloBoard';
 import './index.css';
-import Board from './components/Board';
 
 ReactDOM.render(
   <React.StrictMode>
-    <Board />
+    <OthelloBoard />
   </React.StrictMode>,
   document.getElementById('root')
 );
