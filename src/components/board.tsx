@@ -1,53 +1,145 @@
-import React from 'react';
-import Piece from './Piece';
+import React, { useState } from 'react';
+import FlipPieces from './FlipPieces';
+
+type CellColor = 'B' | 'W' | null;
 
 const Board = () => {
-  const boardSize = 8;
-  const cellSize = 80;
-  const boardWidth = boardSize * cellSize;
-  const boardHeight = boardSize * cellSize;
+  const size = 8;
 
-  const boardStyle = {
-    width: `${boardWidth}px`,
-    height: `${boardHeight}px`,
-    backgroundColor: 'green',
-    border: '2px solid black',
-    display: 'grid',
-    gridTemplateColumns: `repeat(${boardSize}, ${cellSize}px)`,
-    gridTemplateRows: `repeat(${boardSize}, ${cellSize}px)`,
-  };
+  const initialBoard = Array(size).fill(null).map(() => Array(size).fill(null));
 
-  const renderCells = () => {
-    const cells = [];
-    for (let row = 0; row < boardSize; row++) {
-      for (let col = 0; col < boardSize; col++) {
-        const cellStyle = {
-          width: `${cellSize}px`,
-          height: `${cellSize}px`,
-          border: '1px solid black',
-        };
+  initialBoard[3][3] = 'B';
+  initialBoard[4][4] = 'B';
+  initialBoard[4][3] = 'W';
+  initialBoard[3][4] = 'W';
+  
+  const [board, setBoard] = useState(initialBoard);
+  const [turn, setTurn] = useState('B');
 
-        if ((row === 3 && col === 3) || (row === 4 && col === 4)) {
-          cells.push(
-            <div key={`${row}-${col}`} style={cellStyle}>
-              <Piece color="black" />
-            </div>
-          );
-        } else if ((row === 3 && col === 4) || (row === 4 && col === 3)) {
-          cells.push(
-            <div key={`${row}-${col}`} style={cellStyle}>
-              <Piece color="white" />
-            </div>
-          );
-        } else {
-          cells.push(<div key={`${row}-${col}`} style={cellStyle}></div>);
+  const calculateScore = () => {
+    let blackCount = 0;
+    let whiteCount = 0;
+  
+    for (let i = 0; i < size; i++) {
+      for (let j = 0; j < size; j++) {
+        if (board[i][j] === 'B') {
+          blackCount++;
+        } else if (board[i][j] === 'W') {
+          whiteCount++;
         }
       }
     }
-    return cells;
+  
+    if (blackCount > whiteCount) {
+      return 'B';
+    } else if (whiteCount > blackCount) {
+      return 'W';
+    } else {
+      return 'Draw';
+    }
+  };
+  
+
+  const handleClick = (row: number, col: number) => {
+    if (board[row][col] === null && isValidMove(row, col)) {
+        const newBoard = [...board];
+        newBoard[row][col] = turn;
+        setBoard(newBoard);
+        setTurn(turn === 'B' ? 'W' : 'B');
+    }
   };
 
-  return <div style={boardStyle}>{renderCells()}</div>;
+  const isValidMove = (row: number, col: number): boolean => {
+    const directions: [number, number][] = [
+      [0, 1], // 右
+      [0, -1], // 左
+      [1, 0], // 下
+      [-1, 0], // 上
+      [1, 1], // 右下
+      [-1, -1], // 左上
+      [1, -1], // 左下
+      [-1, 1], // 右上
+    ];
+
+    for (const [dx, dy] of directions) {
+      let x = row + dx;
+      let y = col + dy;
+      let foundOpponent = false;
+
+      while (x >= 0 && x < size && y >= 0 && y < size) {
+        if (board[x][y] === null) {
+          break;
+        }
+        if (board[x][y] !== turn) {
+          foundOpponent = true;
+        } else if (board[x][y] === turn && foundOpponent) {
+          return true;
+        } else {
+          break;
+        }
+        x += dx;
+        y += dy;
+      }
+    }
+
+    return false;
 };
+
+  
+  
+const renderCell = (row: number, col: number) => {
+    const cellColor: CellColor = board[row][col];
+  
+    let backgroundColor = 'green';
+    if (cellColor === 'B') {
+      backgroundColor = 'black';
+    } else if (cellColor === 'W') {
+      backgroundColor = 'white';
+    } else if (isValidMove(row, col)) {
+      backgroundColor = turn === 'B' ? 'darkgreen' : 'lightgreen';
+    }
+  
+    return (
+      <button
+        key={`${row}-${col}`}
+        onClick={() => handleClick(row, col)}
+        style={{
+          width: '80px',
+          height: '80px',
+          backgroundColor,
+        }}
+      />
+
+      
+    );
+  };
+  
+
+  const renderRow = (i: number) => {
+    const row = [];
+    for (let j = 0; j < size; j++) {
+      row.push(renderCell(i, j));
+    }
+    return (
+      <div style={{ display: 'flex' }}>
+        {row}
+      </div>
+    );
+  }
+
+  const renderBoard = () => {
+    const rows = [];
+    for (let i = 0; i < size; i++) {
+      rows.push(renderRow(i));
+    }
+    return rows;
+  }
+
+  return (
+    <div style={{ width: '640px', height: '640px' }}>
+      {renderBoard()}
+    </div>
+  );
+}
 
 export default Board;
