@@ -11,6 +11,8 @@ const initialBoard = Array(8).fill(null).map(() =>
   Array<CellState>(8).fill(CellState.EMPTY)
 );
 
+// const [highlightedBoard, setHighlightedBoard] = useState(initialBoard.map(row => row.map(() => false)));
+
 // 初期状態で中央に4つの石を置く
 initialBoard[3][3] = CellState.BLACK;
 initialBoard[4][4] = CellState.BLACK;
@@ -77,12 +79,50 @@ const OthelloBoard = () => {
   };
 
   const canPlaceStone = (x: number, y: number) => {
-    // 石を置くことができるか判定するロジックを実装する
-    // 自分の色の石で相手の石が1個以上挟める場所を判定する
+    if (board[y][x] !== CellState.EMPTY) {
+      return false; // 既に石が置かれている場合は置けない
+    }
   
-    // TODO: 石を置くことができるか判定する処理を実装する
+    const directions: [number, number][] = [
+      [0, 1], // 右
+      [0, -1], // 左
+      [1, 0], // 下
+      [-1, 0], // 上
+      [1, 1], // 右下
+      [-1, -1], // 左上
+      [1, -1], // 左下
+      [-1, 1], // 右上
+    ];
   
-    return true; // 仮の実装として常にtrueを返す
+    let canPlace = false;
+  
+    for (const [dx, dy] of directions) {
+      let nx = x + dx;
+      let ny = y + dy;
+      let opponentPiecesCount = 0;
+  
+      while (nx >= 0 && nx < 8 && ny >= 0 && ny < 8) {
+        if (board[ny][nx] === CellState.EMPTY) {
+          break;
+        }
+        if (board[ny][nx] !== turn) {
+          opponentPiecesCount++;
+        } else if (board[ny][nx] === turn && opponentPiecesCount > 0) {
+          canPlace = true; // 自分の石と挟んで1個以上相手の石がある場合は置ける
+          break;
+        } else {
+          break;
+        }
+        nx += dx;
+        ny += dy;
+      }
+  
+      if (canPlace) {
+        break;
+      }
+    }
+  
+    return canPlace;
   };
 
   const renderCell = (x: number, y: number) => {
