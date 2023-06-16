@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react'; 
 import './OthelloBoard.css';
 
 enum CellState {
@@ -23,6 +23,12 @@ const OthelloBoard = () => {
   const [board, setBoard] = useState(initialBoard);
   const [turn, setTurn] = useState(CellState.BLACK); // 追加
   const [isGameOver, setIsGameOver] = useState(false);
+
+  useEffect(() => {
+    if (isGameOver) {
+      alert("ゲーム終了");
+    }
+  }, [isGameOver]);
 
   const hasLegalMove = (turn: CellState) => {
     for (let y = 0; y < 8; y++) {
@@ -173,7 +179,6 @@ const canPlaceStone = (x: number, y: number, turn: CellState) => {
       <div className="othello-board">
         {board.map((row, y) => row.map((_, x) => renderCell(x, y)))}
       </div>
-      {isGameOver && <div>ゲーム終了</div>}
     </div>
   );
 };
