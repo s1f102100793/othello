@@ -41,6 +41,8 @@ const OthelloBoard = () => {
   const [turn, setTurn] = useState(CellState.BLACK); // 追加
   const [isGameOver, setIsGameOver] = useState(false);
 
+  const [highlightedBoard, setHighlightedBoard] = useState(initialBoard.map(row => row.map(() => false)));
+
   useEffect(() => {
     if (isGameOver) {
       const { blackCount, whiteCount } = getStoneCounts(board);
@@ -57,6 +59,24 @@ const OthelloBoard = () => {
       alert(message);
     }
   }, [isGameOver, board]);
+
+  useEffect(() => {
+    updateHighlightedBoard(); // 追加
+  }, [turn]);
+
+  const updateHighlightedBoard = () => {
+    const newHighlightedBoard = initialBoard.map(row => row.map(() => false));
+
+    for (let y = 0; y < 8; y++) {
+      for (let x = 0; x < 8; x++) {
+        if (canPlaceStone(x, y, turn)) {
+          newHighlightedBoard[y][x] = true;
+        }
+      }
+    }
+
+    setHighlightedBoard(newHighlightedBoard);
+  };
 
   const hasLegalMove = (turn: CellState) => {
     for (let y = 0; y < 8; y++) {
@@ -199,6 +219,7 @@ const canPlaceStone = (x: number, y: number, turn: CellState) => {
 
   const renderCell = (x: number, y: number) => {
     const cellState = board[y][x];
+    const isHighlighted = highlightedBoard[y][x]; // 追加
     let cellContent;
     if (cellState === CellState.BLACK) {
       cellContent = <div className="black"></div>;
@@ -208,8 +229,10 @@ const canPlaceStone = (x: number, y: number, turn: CellState) => {
       cellContent = null;
     }
 
+    const cellClassName = isHighlighted ? 'cell highlighted' : 'cell'; // 更新
+
     return (
-      <div key={x} className="cell" onClick={() => handleCellClick(x, y)}>
+      <div key={x} className={cellClassName} onClick={() => handleCellClick(x, y)}>
         {cellContent}
       </div>
     );

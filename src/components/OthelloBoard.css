@@ -45,3 +45,7 @@ body {
   font-weight: bold;
   margin-bottom: 10px;
 }
+
+.cell.highlighted {
+  background-color: #90EE90; /* 任意の色を選択 */
+}
