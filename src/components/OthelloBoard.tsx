@@ -19,6 +19,23 @@ initialBoard[4][4] = CellState.BLACK;
 initialBoard[3][4] = CellState.WHITE;
 initialBoard[4][3] = CellState.WHITE;
 
+const getStoneCounts = (board: CellState[][]) => {
+  let blackCount = 0;
+  let whiteCount = 0;
+
+  for (let y = 0; y < 8; y++) {
+    for (let x = 0; x < 8; x++) {
+      if (board[y][x] === CellState.BLACK) {
+        blackCount++;
+      } else if (board[y][x] === CellState.WHITE) {
+        whiteCount++;
+      }
+    }
+  }
+
+  return { blackCount, whiteCount };
+};
+
 const OthelloBoard = () => {
   const [board, setBoard] = useState(initialBoard);
   const [turn, setTurn] = useState(CellState.BLACK); // 追加
@@ -26,9 +43,20 @@ const OthelloBoard = () => {
 
   useEffect(() => {
     if (isGameOver) {
-      alert("ゲーム終了");
+      const { blackCount, whiteCount } = getStoneCounts(board);
+      let message = "ゲーム終了：";
+
+      if (blackCount > whiteCount) {
+        message += "黒の勝ち";
+      } else if (whiteCount > blackCount) {
+        message += "白の勝ち";
+      } else {
+        message += "引き分け";
+      }
+
+      alert(message);
     }
-  }, [isGameOver]);
+  }, [isGameOver, board]);
 
   const hasLegalMove = (turn: CellState) => {
     for (let y = 0; y < 8; y++) {
