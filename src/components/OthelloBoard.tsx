@@ -134,8 +134,21 @@ const OthelloBoard = () => {
           setIsGameOver(true);
         }
       }
-  }
+ const renderCurrentTurn = (turn: CellState) => { // 引数turnを追加
+  return `現在のターン：${turn === CellState.BLACK ? "黒" : "白"}`;
 };
+
+  return (
+    <div>
+        {/* オセロ盤の上部に現在のターンを表示する */}
+        <div className="turn-display">{renderCurrentTurn(turn)}{/* 引数turnを渡す */}</div>
+        <div className="othello-board">
+            {board.map((row, y) => row.map((_, x) => renderCell(x, y)))}
+        </div>
+    </div>
+  );
+}
+}
 
 const canPlaceStone = (x: number, y: number, turn: CellState) => {
     if (board[y][x] !== CellState.EMPTY) {
