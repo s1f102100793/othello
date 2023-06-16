@@ -121,18 +121,19 @@ const OthelloBoard = () => {
       setBoard(newBoard);
   
       // 次のターンに進む
-    const nextTurn = turn === CellState.BLACK ? CellState.WHITE : CellState.BLACK;
-    if (hasLegalMove(nextTurn)) {
-      setTurn(nextTurn);
-    } else {
-      // 次のターンもパスされる場合
-      if (hasLegalMove(turn)) {
-        setTurn(nextTurn); // 強制的にターンを切り替える
+      const nextTurn = turn === CellState.BLACK ? CellState.WHITE : CellState.BLACK;
+      if (hasLegalMove(nextTurn)) {
+        setTurn(nextTurn);
       } else {
-        // 両者とも置けない場合 -> ゲーム終了
-        setIsGameOver(true);
+        // 次のターンもパスされる場合
+        if (hasLegalMove(turn)) {
+          alert(nextTurn === CellState.BLACK ? "黒はパスです" : "白はパスです");  // アラートを表示
+          // ターンを切り替えずに次のプレイヤーに続行させる
+        } else {
+          // 両者とも置けない場合 -> ゲーム終了
+          setIsGameOver(true);
+        }
       }
-    }
   }
 };
 
