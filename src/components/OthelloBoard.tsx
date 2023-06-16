@@ -149,6 +149,7 @@ const OthelloBoard = () => {
         if (hasLegalMove(turn)) {
           alert(nextTurn === CellState.BLACK ? "黒はパスです" : "白はパスです");  // アラートを表示
           // ターンを切り替えずに次のプレイヤーに続行させる
+          updateHighlightedBoard(); // 追加
         } else {
           // 両者とも置けない場合 -> ゲーム終了
           setIsGameOver(true);
