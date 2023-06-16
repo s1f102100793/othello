@@ -22,10 +22,23 @@ initialBoard[4][3] = CellState.WHITE;
 const OthelloBoard = () => {
   const [board, setBoard] = useState(initialBoard);
   const [turn, setTurn] = useState(CellState.BLACK); // 追加
+  const [isGameOver, setIsGameOver] = useState(false);
+
+  const hasLegalMove = (turn: CellState) => {
+    for (let y = 0; y < 8; y++) {
+      for (let x = 0; x < 8; x++) {
+        if (canPlaceStone(x, y, turn)) {
+          return true;
+        }
+      }
+    }
+    return false;
+  };
+
 
   const handleCellClick = (x: number, y: number) => {
     // 石を置くことができるか判定する
-    const canPlace = canPlaceStone(x, y);
+    const canPlace = canPlaceStone(x, y, turn);
   
     if (canPlace) {
       // 新しい状態を生成してsetBoardで更新する
@@ -73,12 +86,23 @@ const OthelloBoard = () => {
 
       setBoard(newBoard);
   
-      // ターンを切り替える
-      setTurn(turn === CellState.BLACK ? CellState.WHITE : CellState.BLACK);
+      // 次のターンに進む
+    const nextTurn = turn === CellState.BLACK ? CellState.WHITE : CellState.BLACK;
+    if (hasLegalMove(nextTurn)) {
+      setTurn(nextTurn);
+    } else {
+      // 次のターンもパスされる場合
+      if (hasLegalMove(turn)) {
+        setTurn(nextTurn); // 強制的にターンを切り替える
+      } else {
+        // 両者とも置けない場合 -> ゲーム終了
+        setIsGameOver(true);
+      }
     }
-  };
+  }
+};
 
-  const canPlaceStone = (x: number, y: number) => {
+const canPlaceStone = (x: number, y: number, turn: CellState) => {
     if (board[y][x] !== CellState.EMPTY) {
       return false; // 既に石が置かれている場合は置けない
     }
@@ -144,8 +168,16 @@ const OthelloBoard = () => {
   };
 
 
-  return <div className="othello-board">{board.map((row, y) => row.map((_, x) => renderCell(x, y)))}</div>;
+  return (
+    <div>
+      <div className="othello-board">
+        {board.map((row, y) => row.map((_, x) => renderCell(x, y)))}
+      </div>
+      {isGameOver && <div>ゲーム終了</div>}
+    </div>
+  );
 };
+
 
 
 
