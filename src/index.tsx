@@ -1,10 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import OthelloBoard from './components/OthelloBoard'; // この行を追
+import OthelloBoard from './components/OthelloBoard';
+import './index.css';
 
 ReactDOM.render(
   <React.StrictMode>
-    <OthelloBoard /> {/* "App" を "OthelloBoard" に変更 */}
+    <OthelloBoard />
   </React.StrictMode>,
   document.getElementById('root')
 );
