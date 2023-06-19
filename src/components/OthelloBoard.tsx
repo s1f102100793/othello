@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import "./OthelloBoard.css";
-
 enum CellState {
   EMPTY,
   BLACK,
@@ -53,19 +52,11 @@ const OthelloBoard = () => {
     updateHighlightedBoard();
   }, [turn]);
   const resetGame = () => {
-    const resetBoard = Array(8).fill(null).map(() => Array<CellState>(8).fill(CellState.EMPTY));
-    resetBoard[3][3] = CellState.BLACK;
-    resetBoard[4][4] = CellState.BLACK;
-    resetBoard[3][4] = CellState.WHITE;
-    resetBoard[4][3] = CellState.WHITE;
-  
+    const resetBoard = initialBoard.map(row => row.map(cell => cell));
     setBoard(resetBoard);
     setTurn(CellState.BLACK);
     setIsGameOver(false);
-    updateHighlightedBoard(); // コマの置ける位置をリセットする
   };
-  
-  
   const updateHighlightedBoard = () => {
     const newHighlightedBoard = initialBoard.map((row) =>
       row.map(() => false)
