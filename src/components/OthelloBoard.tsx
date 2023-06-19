@@ -52,10 +52,10 @@ const OthelloBoard = () => {
     updateHighlightedBoard();
   }, [turn]);
   const resetGame = () => {
-    const resetBoard = initialBoard.map(row => row.map(cell => cell));
-    setBoard(resetBoard);
+    setBoard(initialBoard.map(row => row.map(cell => cell)));
     setTurn(CellState.BLACK);
     setIsGameOver(false);
+    updateHighlightedBoard();
   };
   const updateHighlightedBoard = () => {
     const newHighlightedBoard = initialBoard.map((row) =>
