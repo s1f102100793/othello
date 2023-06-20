@@ -50,9 +50,18 @@ const OthelloBoard = () => {
   }, [isGameOver, board]);
   useEffect(() => {
     updateHighlightedBoard();
-  }, [turn]);
+  }, [board]);
   const resetGame = () => {
-    setBoard(initialBoard.map(row => row.map(cell => cell)));
+    const resetBoard = Array(8)
+      .fill(null)
+      .map(() => Array<CellState>(8).fill(CellState.EMPTY));
+  
+    resetBoard[3][3] = CellState.BLACK;
+    resetBoard[4][4] = CellState.BLACK;
+    resetBoard[3][4] = CellState.WHITE;
+    resetBoard[4][3] = CellState.WHITE;
+  
+    setBoard(resetBoard);
     setTurn(CellState.BLACK);
     setIsGameOver(false);
     updateHighlightedBoard();
