@@ -78,8 +78,8 @@ body {
   grid-template-columns: repeat(8, 1fr);
   grid-template-rows: repeat(8, 1fr);
   grid-gap: 2px;
-  width: 665px;
-  height: 665px;
+  width: 670px;
+  height: 670px;
   background-color: #528750;
 }
 
